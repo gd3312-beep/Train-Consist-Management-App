@@ -22,6 +22,7 @@ public class TrainConsistManagement {
             Train train = uc1InitializeTrain();
             uc2AddPassengerBogies(train);
             uc3TrackUniqueBogieIds(train);
+            uc4MaintainOrderedBogieIds(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -80,6 +81,20 @@ public class TrainConsistManagement {
 
         System.out.println("Unique bogie IDs: " + uniqueIds);
         train.displaySummary();
+    }
+
+    private static void uc4MaintainOrderedBogieIds(Train train) {
+        printTitle("UC4 - Maintain Ordered Bogie IDs");
+        SortedSet<String> orderedIds = new TreeSet<>();
+
+        for (Bogie bogie : train.getBogies()) {
+            orderedIds.add(bogie.getId());
+        }
+
+        System.out.println("Ordered bogie IDs using TreeSet:");
+        for (String id : orderedIds) {
+            System.out.println(id);
+        }
     }
 
     private static void printTitle(String title) {
