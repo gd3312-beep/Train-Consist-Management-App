@@ -24,6 +24,7 @@ public class TrainConsistManagement {
             uc3TrackUniqueBogieIds(train);
             uc4MaintainOrderedBogieIds(train);
             uc5PreserveInsertionOrder(train);
+            uc6MapBogieToCapacity(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -111,6 +112,19 @@ public class TrainConsistManagement {
         System.out.println("Bogie IDs with insertion order and no duplicates:");
         for (String id : orderedByInsertion) {
             System.out.println(id);
+        }
+    }
+
+    private static void uc6MapBogieToCapacity(Train train) {
+        printTitle("UC6 - Map Bogie to Capacity");
+        Map<String, Integer> bogieCapacityMap = new HashMap<>();
+
+        for (Bogie bogie : train.getBogies()) {
+            bogieCapacityMap.put(bogie.getId(), bogie.getCapacity());
+        }
+
+        for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
         }
     }
 
