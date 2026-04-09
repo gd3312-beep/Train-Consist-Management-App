@@ -20,6 +20,7 @@ public class TrainConsistManagement {
     public static void main(String[] args) {
         try {
             Train train = uc1InitializeTrain();
+            uc2AddPassengerBogies(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -32,6 +33,27 @@ public class TrainConsistManagement {
         System.out.println("Initial total bogies: " + train.getBogies().size());
         train.displaySummary();
         return train;
+    }
+
+    private static void uc2AddPassengerBogies(Train train) throws InvalidCapacityException {
+        printTitle("UC2 - Add Passenger Bogies to Train");
+        PassengerBogie sleeper = new PassengerBogie("BG101", "Sleeper", 72);
+        PassengerBogie acChair = new PassengerBogie("BG102", "AC Chair", 56);
+        PassengerBogie firstClass = new PassengerBogie("BG103", "First Class", 24);
+        PassengerBogie extraCoach = new PassengerBogie("BG104", "Sleeper", 72);
+
+        train.addBogie(sleeper);
+        train.addBogie(acChair);
+        train.addBogie(firstClass);
+        train.addBogie(extraCoach);
+
+        System.out.println("After adding passenger bogies:");
+        train.displaySummary();
+
+        System.out.println("Does BG102 exist? " + train.containsBogie("BG102"));
+        System.out.println("Removing BG104: " + train.removeBogie("BG104"));
+        System.out.println("After removal:");
+        train.displaySummary();
     }
 
     private static void printTitle(String title) {
