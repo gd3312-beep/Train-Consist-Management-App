@@ -26,6 +26,7 @@ public class TrainConsistManagement {
             uc5PreserveInsertionOrder(train);
             uc6MapBogieToCapacity(train);
             uc7SortBogiesByCapacity(train);
+            uc8FilterPassengerBogies(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -137,6 +138,23 @@ public class TrainConsistManagement {
         for (Bogie bogie : sortedBogies) {
             System.out.println(bogie.getId() + " | " + bogie.getType() + " | " + bogie.getCapacity());
         }
+    }
+
+    private static void uc8FilterPassengerBogies(Train train) {
+        printTitle("UC8 - Filter Passenger Bogies Using Streams");
+        List<PassengerBogie> filteredPassengerBogies = filterPassengerBogies(train.getBogies(), 50);
+
+        for (PassengerBogie bogie : filteredPassengerBogies) {
+            System.out.println(bogie.getId() + " | " + bogie.getType() + " | Seats: " + bogie.getCapacity());
+        }
+    }
+
+    static List<PassengerBogie> filterPassengerBogies(List<Bogie> bogies, int minimumCapacity) {
+        return bogies.stream()
+                .filter(bogie -> bogie instanceof PassengerBogie)
+                .map(bogie -> (PassengerBogie) bogie)
+                .filter(bogie -> bogie.getCapacity() >= minimumCapacity)
+                .collect(Collectors.toList());
     }
 
     private static void printTitle(String title) {
