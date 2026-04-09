@@ -21,6 +21,7 @@ public class TrainConsistManagement {
         try {
             Train train = uc1InitializeTrain();
             uc2AddPassengerBogies(train);
+            uc3TrackUniqueBogieIds(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -53,6 +54,31 @@ public class TrainConsistManagement {
         System.out.println("Does BG102 exist? " + train.containsBogie("BG102"));
         System.out.println("Removing BG104: " + train.removeBogie("BG104"));
         System.out.println("After removal:");
+        train.displaySummary();
+    }
+
+    private static void uc3TrackUniqueBogieIds(Train train) throws InvalidCapacityException {
+        printTitle("UC3 - Track Unique Bogie IDs");
+        Set<String> uniqueIds = new HashSet<>();
+
+        for (Bogie bogie : train.getBogies()) {
+            uniqueIds.add(bogie.getId());
+        }
+
+        GoodsBogie goodsOne = new GoodsBogie("BG201", "Rectangular", 80, "COAL", "COL-210");
+        GoodsBogie goodsTwo = new GoodsBogie("BG202", "Cylindrical", 65, "PETROLEUM", "PET-450");
+
+        System.out.println("Trying to add duplicate ID BG101: " + uniqueIds.add("BG101"));
+        if (uniqueIds.add(goodsOne.getId())) {
+            train.addBogie(goodsOne);
+            System.out.println(goodsOne.getId() + " added to train");
+        }
+        if (uniqueIds.add(goodsTwo.getId())) {
+            train.addBogie(goodsTwo);
+            System.out.println(goodsTwo.getId() + " added to train");
+        }
+
+        System.out.println("Unique bogie IDs: " + uniqueIds);
         train.displaySummary();
     }
 
