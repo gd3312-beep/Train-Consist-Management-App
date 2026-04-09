@@ -25,6 +25,7 @@ public class TrainConsistManagement {
             uc4MaintainOrderedBogieIds(train);
             uc5PreserveInsertionOrder(train);
             uc6MapBogieToCapacity(train);
+            uc7SortBogiesByCapacity(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -125,6 +126,16 @@ public class TrainConsistManagement {
 
         for (Map.Entry<String, Integer> entry : bogieCapacityMap.entrySet()) {
             System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
+    }
+
+    private static void uc7SortBogiesByCapacity(Train train) {
+        printTitle("UC7 - Sort Bogies by Capacity");
+        List<Bogie> sortedBogies = new ArrayList<>(train.getBogies());
+        sortedBogies.sort(Comparator.comparingInt(Bogie::getCapacity).reversed());
+
+        for (Bogie bogie : sortedBogies) {
+            System.out.println(bogie.getId() + " | " + bogie.getType() + " | " + bogie.getCapacity());
         }
     }
 
