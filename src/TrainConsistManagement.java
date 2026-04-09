@@ -23,6 +23,7 @@ public class TrainConsistManagement {
             uc2AddPassengerBogies(train);
             uc3TrackUniqueBogieIds(train);
             uc4MaintainOrderedBogieIds(train);
+            uc5PreserveInsertionOrder(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -93,6 +94,22 @@ public class TrainConsistManagement {
 
         System.out.println("Ordered bogie IDs using TreeSet:");
         for (String id : orderedIds) {
+            System.out.println(id);
+        }
+    }
+
+    private static void uc5PreserveInsertionOrder(Train train) {
+        printTitle("UC5 - Preserve Insertion Order of Bogies");
+        LinkedHashSet<String> orderedByInsertion = new LinkedHashSet<>();
+
+        for (Bogie bogie : train.getBogies()) {
+            orderedByInsertion.add(bogie.getId());
+        }
+
+        orderedByInsertion.add("BG102");
+
+        System.out.println("Bogie IDs with insertion order and no duplicates:");
+        for (String id : orderedByInsertion) {
             System.out.println(id);
         }
     }
