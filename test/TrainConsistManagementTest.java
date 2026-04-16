@@ -53,4 +53,12 @@ class TrainConsistManagementTest {
         assertEquals(128, totalSeats);
     }
 
+    @Test
+    void testValidateTrainAndCargoCodes() {
+        assertTrue(TrainConsistManagement.isValidTrainId("TRN-1234"));
+        assertFalse(TrainConsistManagement.isValidTrainId("TRN1234"));
+        assertTrue(TrainConsistManagement.isValidCargoCode("PET-450"));
+        assertFalse(TrainConsistManagement.isValidCargoCode("pet-450"));
+    }
+
 }
