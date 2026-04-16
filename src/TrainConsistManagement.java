@@ -31,6 +31,7 @@ public class TrainConsistManagement {
             uc10CountTotalSeats(train);
             uc11ValidateTrainAndCargoCodes(train);
             uc12SafetyComplianceCheck(train);
+            uc13PerformanceComparison(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -203,6 +204,38 @@ public class TrainConsistManagement {
                 System.out.println("Unsafe bogie found: " + bogie.getId() + " | " + bogie.getShape() + " | " + bogie.getCargoType());
             }
         }
+    }
+
+    private static void uc13PerformanceComparison(Train train) {
+        printTitle("UC13 - Performance Comparison");
+        List<PassengerBogie> passengerBogies = train.getBogies().stream()
+                .filter(bogie -> bogie instanceof PassengerBogie)
+                .map(bogie -> (PassengerBogie) bogie)
+                .collect(Collectors.toList());
+
+        List<PassengerBogie> bigList = new ArrayList<>();
+        for (int i = 0; i < 40000; i++) {
+            bigList.addAll(passengerBogies);
+        }
+
+        long loopStart = System.nanoTime();
+        int loopSeats = 0;
+        for (PassengerBogie bogie : bigList) {
+            if (bogie.getCapacity() >= 0) {
+                loopSeats += bogie.getCapacity();
+            }
+        }
+        long loopEnd = System.nanoTime();
+
+        long streamStart = System.nanoTime();
+        int streamSeats = bigList.stream()
+                .filter(bogie -> bogie.getCapacity() >= 0)
+                .mapToInt(Bogie::getCapacity)
+                .sum();
+        long streamEnd = System.nanoTime();
+
+        System.out.println("Loop total seats: " + loopSeats + ", time: " + (loopEnd - loopStart) + " ns");
+        System.out.println("Stream total seats: " + streamSeats + ", time: " + (streamEnd - streamStart) + " ns");
     }
 
     static List<PassengerBogie> filterPassengerBogies(List<Bogie> bogies, int minimumCapacity) {
