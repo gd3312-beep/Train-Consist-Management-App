@@ -29,6 +29,7 @@ public class TrainConsistManagement {
             uc8FilterPassengerBogies(train);
             uc9GroupBogiesByType(train);
             uc10CountTotalSeats(train);
+            uc11ValidateTrainAndCargoCodes(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -169,6 +170,20 @@ public class TrainConsistManagement {
         System.out.println("Total seats in passenger bogies: " + totalSeats);
     }
 
+    private static void uc11ValidateTrainAndCargoCodes(Train train) {
+        printTitle("UC11 - Validate Train ID and Cargo Codes");
+        List<String> trainIds = Arrays.asList(train.getTrainId(), "TRATN12", "TRN12A", "1234-TRN");
+        List<String> cargoCodes = Arrays.asList("COL-210", "PET-450", "PE-90", "coal-210");
+
+        for (String trainId : trainIds) {
+            System.out.println(trainId + " valid train ID? " + isValidTrainId(trainId));
+        }
+
+        for (String cargoCode : cargoCodes) {
+            System.out.println(cargoCode + " valid cargo code? " + isValidCargoCode(cargoCode));
+        }
+    }
+
     static List<PassengerBogie> filterPassengerBogies(List<Bogie> bogies, int minimumCapacity) {
         return bogies.stream()
                 .filter(bogie -> bogie instanceof PassengerBogie)
@@ -187,6 +202,14 @@ public class TrainConsistManagement {
                 .filter(bogie -> bogie instanceof PassengerBogie)
                 .map(Bogie::getCapacity)
                 .reduce(0, Integer::sum);
+    }
+
+    static boolean isValidTrainId(String trainId) {
+        return TRAIN_ID_PATTERN.matcher(trainId).matches();
+    }
+
+    static boolean isValidCargoCode(String cargoCode) {
+        return CARGO_CODE_PATTERN.matcher(cargoCode).matches();
     }
 
     private static void printTitle(String title) {
