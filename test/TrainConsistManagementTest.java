@@ -26,4 +26,18 @@ class TrainConsistManagementTest {
         assertTrue(result.stream().allMatch(bogie -> bogie.getCapacity() >= 50));
     }
 
+    @Test
+    void testGroupBogiesByType() throws InvalidCapacityException {
+        List<Bogie> bogies = Arrays.asList(
+                new PassengerBogie("BG101", "Sleeper", 72),
+                new PassengerBogie("BG102", "Sleeper", 68),
+                new PassengerBogie("BG103", "AC Chair", 56)
+        );
+
+        Map<String, List<Bogie>> grouped = TrainConsistManagement.groupBogiesByType(bogies);
+
+        assertEquals(2, grouped.get("Sleeper").size());
+        assertEquals(1, grouped.get("AC Chair").size());
+    }
+
 }
