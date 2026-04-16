@@ -40,4 +40,17 @@ class TrainConsistManagementTest {
         assertEquals(1, grouped.get("AC Chair").size());
     }
 
+    @Test
+    void testCountTotalSeats() throws InvalidCapacityException {
+        List<Bogie> bogies = Arrays.asList(
+                new PassengerBogie("BG101", "Sleeper", 72),
+                new PassengerBogie("BG102", "AC Chair", 56),
+                new GoodsBogie("BG201", "Rectangular", 80, "COAL", "COL-210")
+        );
+
+        int totalSeats = TrainConsistManagement.countTotalSeats(bogies);
+
+        assertEquals(128, totalSeats);
+    }
+
 }

@@ -28,6 +28,7 @@ public class TrainConsistManagement {
             uc7SortBogiesByCapacity(train);
             uc8FilterPassengerBogies(train);
             uc9GroupBogiesByType(train);
+            uc10CountTotalSeats(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -161,6 +162,13 @@ public class TrainConsistManagement {
         }
     }
 
+    private static void uc10CountTotalSeats(Train train) {
+        printTitle("UC10 - Count Total Seats in Train");
+        int totalSeats = countTotalSeats(train.getBogies());
+
+        System.out.println("Total seats in passenger bogies: " + totalSeats);
+    }
+
     static List<PassengerBogie> filterPassengerBogies(List<Bogie> bogies, int minimumCapacity) {
         return bogies.stream()
                 .filter(bogie -> bogie instanceof PassengerBogie)
@@ -172,6 +180,13 @@ public class TrainConsistManagement {
     static Map<String, List<Bogie>> groupBogiesByType(List<Bogie> bogies) {
         return bogies.stream()
                 .collect(Collectors.groupingBy(Bogie::getType));
+    }
+
+    static int countTotalSeats(List<Bogie> bogies) {
+        return bogies.stream()
+                .filter(bogie -> bogie instanceof PassengerBogie)
+                .map(Bogie::getCapacity)
+                .reduce(0, Integer::sum);
     }
 
     private static void printTitle(String title) {
