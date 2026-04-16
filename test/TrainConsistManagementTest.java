@@ -61,4 +61,18 @@ class TrainConsistManagementTest {
         assertFalse(TrainConsistManagement.isValidCargoCode("pet-450"));
     }
 
+    @Test
+    void testFindUnsafeGoodsBogies() throws InvalidCapacityException {
+        List<GoodsBogie> goodsBogies = Arrays.asList(
+                new GoodsBogie("BG201", "Rectangular", 80, "COAL", "COL-210"),
+                new GoodsBogie("BG202", "Cylindrical", 65, "PETROLEUM", "PET-450"),
+                new GoodsBogie("BG203", "Cylindrical", 70, "COAL", "COL-333")
+        );
+
+        List<GoodsBogie> unsafeBogies = TrainConsistManagement.findUnsafeGoodsBogies(goodsBogies);
+
+        assertEquals(1, unsafeBogies.size());
+        assertEquals("BG203", unsafeBogies.get(0).getId());
+    }
+
 }

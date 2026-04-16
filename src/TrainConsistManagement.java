@@ -30,6 +30,7 @@ public class TrainConsistManagement {
             uc9GroupBogiesByType(train);
             uc10CountTotalSeats(train);
             uc11ValidateTrainAndCargoCodes(train);
+            uc12SafetyComplianceCheck(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -184,6 +185,26 @@ public class TrainConsistManagement {
         }
     }
 
+    private static void uc12SafetyComplianceCheck(Train train) throws InvalidCapacityException {
+        printTitle("UC12 - Safety Compliance Check for Goods Bogies");
+        List<GoodsBogie> goodsBogies = train.getBogies().stream()
+                .filter(bogie -> bogie instanceof GoodsBogie)
+                .map(bogie -> (GoodsBogie) bogie)
+                .collect(Collectors.toList());
+
+        goodsBogies.add(new GoodsBogie("BG203", "Cylindrical", 70, "COAL", "COL-333"));
+
+        List<GoodsBogie> unsafeBogies = findUnsafeGoodsBogies(goodsBogies);
+
+        if (unsafeBogies.isEmpty()) {
+            System.out.println("All goods bogies passed the safety check");
+        } else {
+            for (GoodsBogie bogie : unsafeBogies) {
+                System.out.println("Unsafe bogie found: " + bogie.getId() + " | " + bogie.getShape() + " | " + bogie.getCargoType());
+            }
+        }
+    }
+
     static List<PassengerBogie> filterPassengerBogies(List<Bogie> bogies, int minimumCapacity) {
         return bogies.stream()
                 .filter(bogie -> bogie instanceof PassengerBogie)
@@ -210,6 +231,27 @@ public class TrainConsistManagement {
 
     static boolean isValidCargoCode(String cargoCode) {
         return CARGO_CODE_PATTERN.matcher(cargoCode).matches();
+    }
+
+    static List<GoodsBogie> findUnsafeGoodsBogies(List<GoodsBogie> goodsBogies) {
+        return goodsBogies.stream()
+                .filter(bogie -> !isCargoSafeForShape(bogie.getShape(), bogie.getCargoType()))
+                .collect(Collectors.toList());
+    }
+
+    static boolean isCargoSafeForShape(String shape, String cargoType) {
+        String safeShape = shape.toUpperCase();
+        String safeCargo = cargoType.toUpperCase();
+
+        if (safeShape.equals("CYLINDRICAL")) {
+            return safeCargo.equals("PETROLEUM") || safeCargo.equals("DIESEL") || safeCargo.equals("CHEMICAL") || safeCargo.equals("WATER");
+        }
+
+        if (safeShape.equals("RECTANGULAR")) {
+            return safeCargo.equals("COAL") || safeCargo.equals("CEMENT") || safeCargo.equals("GRAIN") || safeCargo.equals("IRON");
+        }
+
+        return false;
     }
 
     private static void printTitle(String title) {
