@@ -75,4 +75,10 @@ class TrainConsistManagementTest {
         assertEquals("BG203", unsafeBogies.get(0).getId());
     }
 
+    @Test
+    void testInvalidPassengerCapacityThrowsException() {
+        assertThrows(InvalidCapacityException.class,
+                () -> new PassengerBogie("BG999", "Sleeper", -10));
+    }
+
 }
