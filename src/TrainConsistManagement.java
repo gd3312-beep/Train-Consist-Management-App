@@ -32,6 +32,7 @@ public class TrainConsistManagement {
             uc11ValidateTrainAndCargoCodes(train);
             uc12SafetyComplianceCheck(train);
             uc13PerformanceComparison(train);
+            uc14HandleInvalidBogieCapacity();
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -236,6 +237,16 @@ public class TrainConsistManagement {
 
         System.out.println("Loop total seats: " + loopSeats + ", time: " + (loopEnd - loopStart) + " ns");
         System.out.println("Stream total seats: " + streamSeats + ", time: " + (streamEnd - streamStart) + " ns");
+    }
+
+    private static void uc14HandleInvalidBogieCapacity() {
+        printTitle("UC14 - Handle Invalid Bogie Capacity");
+        try {
+            PassengerBogie invalidBogie = new PassengerBogie("BG999", "Sleeper", -10);
+            System.out.println(invalidBogie.getId());
+        } catch (InvalidCapacityException e) {
+            System.out.println("Custom exception caught: " + e.getMessage());
+        }
     }
 
     static List<PassengerBogie> filterPassengerBogies(List<Bogie> bogies, int minimumCapacity) {
