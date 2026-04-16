@@ -27,6 +27,7 @@ public class TrainConsistManagement {
             uc6MapBogieToCapacity(train);
             uc7SortBogiesByCapacity(train);
             uc8FilterPassengerBogies(train);
+            uc9GroupBogiesByType(train);
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -149,12 +150,28 @@ public class TrainConsistManagement {
         }
     }
 
+    private static void uc9GroupBogiesByType(Train train) {
+        printTitle("UC9 - Group Bogies by Type");
+        Map<String, List<Bogie>> groupedBogies = groupBogiesByType(train.getBogies());
+
+        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue().stream()
+                    .map(Bogie::getId)
+                    .collect(Collectors.toList()));
+        }
+    }
+
     static List<PassengerBogie> filterPassengerBogies(List<Bogie> bogies, int minimumCapacity) {
         return bogies.stream()
                 .filter(bogie -> bogie instanceof PassengerBogie)
                 .map(bogie -> (PassengerBogie) bogie)
                 .filter(bogie -> bogie.getCapacity() >= minimumCapacity)
                 .collect(Collectors.toList());
+    }
+
+    static Map<String, List<Bogie>> groupBogiesByType(List<Bogie> bogies) {
+        return bogies.stream()
+                .collect(Collectors.groupingBy(Bogie::getType));
     }
 
     private static void printTitle(String title) {
