@@ -33,6 +33,7 @@ public class TrainConsistManagement {
             uc12SafetyComplianceCheck(train);
             uc13PerformanceComparison(train);
             uc14HandleInvalidBogieCapacity();
+            uc15SafeCargoAssignment();
         } catch (Exception e) {
             System.out.println("Program stopped: " + e.getMessage());
         }
@@ -249,6 +250,20 @@ public class TrainConsistManagement {
         }
     }
 
+    private static void uc15SafeCargoAssignment() throws InvalidCapacityException {
+        printTitle("UC15 - Safe Cargo Assignment Using try-catch-finally");
+        GoodsBogie goodsBogie = new GoodsBogie("BG301", "Rectangular", 90, "CEMENT", "CEM-300");
+
+        try {
+            assignCargo(goodsBogie, "PETROLEUM", "PET-999");
+            System.out.println("Cargo assigned successfully");
+        } catch (UnsafeCargoAssignmentException e) {
+            System.out.println("Cargo assignment failed: " + e.getMessage());
+        } finally {
+            System.out.println("Final cargo status of " + goodsBogie.getId() + ": " + goodsBogie.getCargoType());
+        }
+    }
+
     static List<PassengerBogie> filterPassengerBogies(List<Bogie> bogies, int minimumCapacity) {
         return bogies.stream()
                 .filter(bogie -> bogie instanceof PassengerBogie)
@@ -296,6 +311,19 @@ public class TrainConsistManagement {
         }
 
         return false;
+    }
+
+    static void assignCargo(GoodsBogie bogie, String cargoType, String cargoCode) throws UnsafeCargoAssignmentException {
+        if (!isValidCargoCode(cargoCode)) {
+            throw new UnsafeCargoAssignmentException("Invalid cargo code format");
+        }
+
+        if (!isCargoSafeForShape(bogie.getShape(), cargoType)) {
+            throw new UnsafeCargoAssignmentException("Cargo " + cargoType + " is not safe for " + bogie.getShape() + " bogie");
+        }
+
+        bogie.setCargoType(cargoType);
+        bogie.setCargoCode(cargoCode);
     }
 
     private static void printTitle(String title) {
