@@ -81,4 +81,12 @@ class TrainConsistManagementTest {
                 () -> new PassengerBogie("BG999", "Sleeper", -10));
     }
 
+    @Test
+    void testAssignCargoThrowsForUnsafeCombination() throws InvalidCapacityException {
+        GoodsBogie goodsBogie = new GoodsBogie("BG301", "Rectangular", 90, "CEMENT", "CEM-300");
+
+        assertThrows(UnsafeCargoAssignmentException.class,
+                () -> TrainConsistManagement.assignCargo(goodsBogie, "PETROLEUM", "PET-999"));
+    }
+
 }
